@@ -27,7 +27,7 @@ class Vitragen:
 
     @classmethod
     def generate_imposters(cls, context, src_obj, hiw=1.0, how=1.0, viw=1.0, vow=1.0):
-        # generate frames (imposters) for src_obj
+        # generate frames (imposters) for src_obj 
         pass
 
 
