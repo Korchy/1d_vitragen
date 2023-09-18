@@ -51,12 +51,16 @@ class Vitragen:
         # create bevel curves for each type of loop
         bevel_hi = cls._bevel_obj(context=context, name='hi', width=hiw)
         obj_hi.data.bevel_object = bevel_hi
+        obj_hi.data.use_fill_caps = True
         bevel_ho = cls._bevel_obj(context=context, name='ho', width=how)
         obj_ho.data.bevel_object = bevel_ho
+        obj_ho.data.use_fill_caps = True
         bevel_vi = cls._bevel_obj(context=context, name='vi', width=viw)
         obj_vi.data.bevel_object = bevel_vi
+        obj_vi.data.use_fill_caps = True
         bevel_vo = cls._bevel_obj(context=context, name='vo', width=vow)
         obj_vo.data.bevel_object = bevel_vo
+        obj_vo.data.use_fill_caps = True
         # return mode back
         bpy.ops.object.mode_set(mode=mode)
 
