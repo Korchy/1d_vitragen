@@ -12,6 +12,9 @@ Blender version
 
 Version history
 -
+1.2.1
+- Defaults changed to rotate_v_imposters = 'Faces', reuse_bevel_objects = True 
+
 1.2.0
 - Added reusing bevel objects
 - Added selector for rotating verticsl imposters (None, Face, Vertex)

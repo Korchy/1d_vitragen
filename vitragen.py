@@ -16,7 +16,7 @@ bl_info = {
     "name": "Vitragen",
     "description": "Generates frames (imposters) for stained-glass windows",
     "author": "Nikita Akimov, Paul Kotelevets",
-    "version": (1, 2, 0),
+    "version": (1, 2, 1),
     "blender": (2, 79, 0),
     "location": "View3D > Tool panel > 1D > Vertical Vertices",
     "doc_url": "https://github.com/Korchy/1d_vitragen",
@@ -271,12 +271,12 @@ class Vitragen_OT_generate_imposters(Operator):
             ('Face', 'Face', 'Face', '', 1),
             ('Vertex', 'Vertex', 'Vertex', '', 2)
         ],
-        default='None',
+        default='Face',
         description='Defines alignment of a vertical imposts. On stands for the average, off stands for the nearest side'
     )
     reuse_bevel_objects = BoolProperty(
         name='Reuse bevel objects',
-        default=False
+        default=True
     )
 
     def execute(self, context):
@@ -371,12 +371,12 @@ def register():
             ('Face', 'Face', 'Face', '', 1),
             ('Vertex', 'Vertex', 'Vertex', '', 2)
         ],
-        default='None',
+        default='Face',
         description='Defines alignment of a vertical imposts. On stands for the average, off stands for the nearest side'
     )
     Scene.vitragen_reuse_bevel_objects = BoolProperty(
         name='Reuse bevel objects',
-        default=False
+        default=True
     )
     register_class(Vitragen_OT_generate_imposters)
     register_class(Vitragen_PT_panel)
