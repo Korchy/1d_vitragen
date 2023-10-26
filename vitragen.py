@@ -15,7 +15,7 @@ bl_info = {
     "name": "Vitragen",
     "description": "Generates frames (imposters) for stained-glass windows",
     "author": "Nikita Akimov, Paul Kotelevets",
-    "version": (1, 2, 2),
+    "version": (1, 2, 3),
     "blender": (2, 79, 0),
     "location": "View3D > Tool panel > 1D > Vertical Vertices",
     "doc_url": "https://github.com/Korchy/1d_vitragen",
@@ -45,10 +45,10 @@ class Vitragen:
         obj_vi = cls._loop_obj(context=context, src_obj=src_obj, name='vi')
         obj_vo = cls._loop_obj(context=context, src_obj=src_obj, name='vo')
         # convert meshes to curves
-        cls._object_to_curve(obj=obj_hi)
-        cls._object_to_curve(obj=obj_ho)
-        cls._object_to_curve(obj=obj_vi)
-        cls._object_to_curve(obj=obj_vo)
+        obj_hi = cls._object_to_curve(context=context, obj=obj_hi)
+        obj_ho = cls._object_to_curve(context=context, obj=obj_ho)
+        obj_vi = cls._object_to_curve(context=context, obj=obj_vi)
+        obj_vo = cls._object_to_curve(context=context, obj=obj_vo)
         # correct imposters tilt
         if rotate_v_imposters != 'None':
             if obj_vi and obj_vi.type == 'CURVE':
@@ -73,15 +73,21 @@ class Vitragen:
             obj_vo.data.bevel_object = bevel_vo
             obj_vo.data.use_fill_caps = True
         # return mode back
+        context.scene.objects.active = src_obj
         bpy.ops.object.mode_set(mode=mode)
 
     @staticmethod
-    def _object_to_curve(obj):
+    def _object_to_curve(context, obj):
         # convert object to curve
         bpy.ops.object.select_all(action='DESELECT')
         obj.select = True
-        bpy.context.scene.objects.active = obj
+        context.scene.objects.active = obj
         bpy.ops.object.convert(target='CURVE')
+        if obj.type != 'CURVE':
+            # can't convert to curve - remove
+            context.blend_data.objects.remove(obj, do_unlink=True)
+            return None
+        return obj
 
     @classmethod
     def _loop_obj(cls, context, src_obj, name):
