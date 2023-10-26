@@ -9,14 +9,13 @@ import bpy
 from bpy.props import BoolProperty, EnumProperty, FloatProperty
 from bpy.types import Operator, Panel, Scene
 from bpy.utils import register_class, unregister_class
-import math
 from mathutils import kdtree, Vector
 
 bl_info = {
     "name": "Vitragen",
     "description": "Generates frames (imposters) for stained-glass windows",
     "author": "Nikita Akimov, Paul Kotelevets",
-    "version": (1, 2, 1),
+    "version": (1, 2, 2),
     "blender": (2, 79, 0),
     "location": "View3D > Tool panel > 1D > Vertical Vertices",
     "doc_url": "https://github.com/Korchy/1d_vitragen",
@@ -52,21 +51,27 @@ class Vitragen:
         cls._object_to_curve(obj=obj_vo)
         # correct imposters tilt
         if rotate_v_imposters != 'None':
-            cls._correct_tilt(context=context, src_obj=src_obj, obj=obj_vi, obj_name='vi', rotate_v_imposters=rotate_v_imposters)
-            cls._correct_tilt(context=context, src_obj=src_obj, obj=obj_vo, obj_name='vo', rotate_v_imposters=rotate_v_imposters)
+            if obj_vi and obj_vi.type == 'CURVE':
+                cls._correct_tilt(context=context, src_obj=src_obj, obj=obj_vi, obj_name='vi', rotate_v_imposters=rotate_v_imposters)
+            if obj_vo and obj_vo.type == 'CURVE':
+                cls._correct_tilt(context=context, src_obj=src_obj, obj=obj_vo, obj_name='vo', rotate_v_imposters=rotate_v_imposters)
         # create bevel curves for each type of loop
-        bevel_hi = cls._bevel_obj(context=context, name='hi', width=hiw, reuse_bevel_objects=reuse_bevel_objects)
-        obj_hi.data.bevel_object = bevel_hi
-        obj_hi.data.use_fill_caps = True
-        bevel_ho = cls._bevel_obj(context=context, name='ho', width=how, reuse_bevel_objects=reuse_bevel_objects)
-        obj_ho.data.bevel_object = bevel_ho
-        obj_ho.data.use_fill_caps = True
-        bevel_vi = cls._bevel_obj(context=context, name='vi', width=viw, reuse_bevel_objects=reuse_bevel_objects)
-        obj_vi.data.bevel_object = bevel_vi
-        obj_vi.data.use_fill_caps = True
-        bevel_vo = cls._bevel_obj(context=context, name='vo', width=vow, reuse_bevel_objects=reuse_bevel_objects)
-        obj_vo.data.bevel_object = bevel_vo
-        obj_vo.data.use_fill_caps = True
+        if obj_hi and obj_hi.type == 'CURVE':
+            bevel_hi = cls._bevel_obj(context=context, name='hi', width=hiw, reuse_bevel_objects=reuse_bevel_objects)
+            obj_hi.data.bevel_object = bevel_hi
+            obj_hi.data.use_fill_caps = True
+        if obj_ho and obj_ho.type == 'CURVE':
+            bevel_ho = cls._bevel_obj(context=context, name='ho', width=how, reuse_bevel_objects=reuse_bevel_objects)
+            obj_ho.data.bevel_object = bevel_ho
+            obj_ho.data.use_fill_caps = True
+        if obj_vi and obj_vi.type == 'CURVE':
+            bevel_vi = cls._bevel_obj(context=context, name='vi', width=viw, reuse_bevel_objects=reuse_bevel_objects)
+            obj_vi.data.bevel_object = bevel_vi
+            obj_vi.data.use_fill_caps = True
+        if obj_vo and obj_vo.type == 'CURVE':
+            bevel_vo = cls._bevel_obj(context=context, name='vo', width=vow, reuse_bevel_objects=reuse_bevel_objects)
+            obj_vo.data.bevel_object = bevel_vo
+            obj_vo.data.use_fill_caps = True
         # return mode back
         bpy.ops.object.mode_set(mode=mode)
 

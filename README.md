@@ -12,6 +12,9 @@ Blender version
 
 Version history
 -
+1.2.2
+- Fixed error with 1 segments source meshes
+
 1.2.1
 - Defaults changed to rotate_v_imposters = 'Faces', reuse_bevel_objects = True 
 
