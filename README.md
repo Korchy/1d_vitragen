@@ -1,6 +1,6 @@
 # 1D Vitragen
 
-Blender add-on.
+Blender add-on for generating vitrage structure from mesh edges.
 
 Add-on functionality
 -
@@ -12,6 +12,9 @@ Blender version
 
 Version history
 -
+1.2.4
+- Integrated to the NA 1D Tools
+
 1.2.2 - 1.2.3
 - Fixed error with 1 segments source meshes. Remove objects wor which can't create imposters.
 

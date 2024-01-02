@@ -15,7 +15,7 @@ bl_info = {
     "name": "Vitragen",
     "description": "Generates frames (imposters) for stained-glass windows",
     "author": "Nikita Akimov, Paul Kotelevets",
-    "version": (1, 2, 3),
+    "version": (1, 2, 4),
     "blender": (2, 79, 0),
     "location": "View3D > Tool panel > 1D > Vertical Vertices",
     "doc_url": "https://github.com/Korchy/1d_vitragen",
@@ -242,6 +242,46 @@ class Vitragen:
         bm.free()
         return vertex_normal, face_normal
 
+    @staticmethod
+    def ui(layout, context):
+        # ui panel
+        op = layout.operator(
+            operator='vitragen.generate_imposters',
+            icon='GRID'
+        )
+        op.width_hi = context.scene.vitragen_width_hi
+        op.width_ho = context.scene.vitragen_width_ho
+        op.width_vi = context.scene.vitragen_width_vi
+        op.width_vo = context.scene.vitragen_width_vo
+        op.rotate_v_imposters = context.scene.vitragen_rotate_v_imposters
+        op.reuse_bevel_objects = context.scene.vitragen_reuse_bevel_objects
+        # props
+        layout.prop(
+            data=context.scene,
+            property='vitragen_width_hi'
+        )
+        layout.prop(
+            data=context.scene,
+            property='vitragen_width_ho'
+        )
+        layout.prop(
+            data=context.scene,
+            property='vitragen_width_vi'
+        )
+        layout.prop(
+            data=context.scene,
+            property='vitragen_width_vo'
+        )
+        layout.prop(
+            data=context.scene,
+            property='vitragen_rotate_v_imposters',
+            expand=True
+        )
+        layout.prop(
+            data=context.scene,
+            property='vitragen_reuse_bevel_objects'
+        )
+
 
 # OPERATORS
 
@@ -313,48 +353,15 @@ class Vitragen_PT_panel(Panel):
     bl_category = '1D'
 
     def draw(self, context):
-        layout = self.layout
-        op = layout.operator(
-            operator='vitragen.generate_imposters',
-            icon='GRID'
-        )
-        op.width_hi = context.scene.vitragen_width_hi
-        op.width_ho = context.scene.vitragen_width_ho
-        op.width_vi = context.scene.vitragen_width_vi
-        op.width_vo = context.scene.vitragen_width_vo
-        op.rotate_v_imposters = context.scene.vitragen_rotate_v_imposters
-        op.reuse_bevel_objects = context.scene.vitragen_reuse_bevel_objects
-        # props
-        layout.prop(
-            data=context.scene,
-            property='vitragen_width_hi'
-        )
-        layout.prop(
-            data=context.scene,
-            property='vitragen_width_ho'
-        )
-        layout.prop(
-            data=context.scene,
-            property='vitragen_width_vi'
-        )
-        layout.prop(
-            data=context.scene,
-            property='vitragen_width_vo'
-        )
-        layout.prop(
-            data=context.scene,
-            property='vitragen_rotate_v_imposters',
-            expand=True
-        )
-        layout.prop(
-            data=context.scene,
-            property='vitragen_reuse_bevel_objects'
+        Vitragen.ui(
+            layout=self.layout,
+            context=context
         )
 
 
 # REGISTER
 
-def register():
+def register(ui=True):
     Scene.vitragen_width_hi = FloatProperty(
         name='Horizontal Inner Width',
         default=0.05,
@@ -390,11 +397,13 @@ def register():
         default=True
     )
     register_class(Vitragen_OT_generate_imposters)
-    register_class(Vitragen_PT_panel)
+    if ui:
+        register_class(Vitragen_PT_panel)
 
 
-def unregister():
-    unregister_class(Vitragen_PT_panel)
+def unregister(ui=True):
+    if ui:
+        unregister_class(Vitragen_PT_panel)
     unregister_class(Vitragen_OT_generate_imposters)
     del Scene.vitragen_reuse_bevel_objects
     del Scene.vitragen_rotate_v_imposters
